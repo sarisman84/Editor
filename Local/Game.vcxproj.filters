@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SR">
+      <UniqueIdentifier>{4A755900-3601-880B-9FAF-880B8B5A880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{010A8043-6D74-34BA-B6B2-E55F225C120F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Game\Game.h" />
+    <ClInclude Include="..\Source\Game\GameWorld.h" />
+    <ClInclude Include="..\Source\Game\SR\Reflect.h">
+      <Filter>SR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Game\SR\ReflectHelper.h">
+      <Filter>SR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Game\Utilities\CameraController.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Game\Utilities\Debug.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Game\Utilities\PropertyInterface.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Game\resource.h" />
+    <ClInclude Include="..\Source\Game\stdafx.h" />
+    <ClInclude Include="..\Source\Game\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Game\Game.cpp" />
+    <ClCompile Include="..\Source\Game\GameWorld.cpp" />
+    <ClCompile Include="..\Source\Game\Utilities\CameraController.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Game\stdafx.cpp" />
+  </ItemGroup>
+</Project>

@@ -26,19 +26,19 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -154,6 +154,7 @@
     <ClInclude Include="..\Source\External\DirectXTex\DDSTextureLoader\DDSTextureLoader11.h" />
     <ClInclude Include="..\Source\External\DirectXTex\ScreenGrab\ScreenGrab11.h" />
     <ClInclude Include="..\Source\External\DirectXTex\WICTextureLoader\WICTextureLoader11.h" />
+    <ClInclude Include="..\Source\External\Dragonite\Input.h" />
     <ClInclude Include="..\Source\External\StackWalker\StackWalker.h" />
     <ClInclude Include="..\Source\External\TGAFBXImporter\FBXImporter.h" />
     <ClInclude Include="..\Source\External\TGAFBXImporter\FBXImporterStructs.h" />
@@ -634,11 +635,13 @@
     <ClInclude Include="..\Source\External\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="..\Source\External\imgui\misc\freetype\imgui_freetype.h" />
     <ClInclude Include="..\Source\External\imgui\misc\single_file\imgui_single_file.h" />
+    <ClInclude Include="..\Source\External\nlohmann\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\External\DirectXTex\DDSTextureLoader\DDSTextureLoader11.cpp" />
     <ClCompile Include="..\Source\External\DirectXTex\ScreenGrab\ScreenGrab11.cpp" />
     <ClCompile Include="..\Source\External\DirectXTex\WICTextureLoader\WICTextureLoader11.cpp" />
+    <ClCompile Include="..\Source\External\Dragonite\Input.cpp" />
     <ClCompile Include="..\Source\External\StackWalker\StackWalker.cpp" />
     <ClCompile Include="..\Source\External\TGAFBXImporter\source\FBXImporter.cpp" />
     <ClCompile Include="..\Source\External\TGAFBXImporter\source\TGAFBXImporter.pch.cpp" />

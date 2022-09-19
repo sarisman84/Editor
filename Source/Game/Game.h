@@ -7,7 +7,7 @@ class Game
 public:
 	Game();
 	~Game();
-	bool Init(const std::wstring& aVersion = L"", HWND aHWND = nullptr);
+	bool Init(const std::wstring& aVersion = L"", HWND aHWND = nullptr, std::function<void(GameWorld*)> anOnUpdateCallback = nullptr);
 private:
 	void InitCallBack();
 	void UpdateCallBack();

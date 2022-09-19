@@ -6,7 +6,7 @@
 #include <iostream>
 #include <tuple>
 
-#include "nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 #include <sstream>
 #include <string> 
@@ -77,10 +77,10 @@ namespace Reflect
 			{
 				std::string name = myName;
 
-				const void* address = static_cast<const void*>(anInstance);
+				/*const void* address = static_cast<const void*>(anInstance);
 				std::stringstream ss;
 				ss << address;
-				name += ss.str();
+				name += ss.str();*/
 
 				SerializeElement<T>(name, *GetValue(anInstance), aJsonFile);
 			}
@@ -89,13 +89,13 @@ namespace Reflect
 			{
 				std::string name = myName;
 
-				const void* address = static_cast<const void*>(anInstance);
-				std::stringstream ss;
-				ss << address;
-				name += ss.str();
+				/*	const void* address = static_cast<const void*>(anInstance);
+					std::stringstream ss;
+					ss << address;
+					name += ss.str();*/
 
-
-				DeserializeElement<T>(name, *GetValue(anInstance), aJsonFile);
+				if (aJsonFile.contains(name))
+					DeserializeElement<T>(name, *GetValue(anInstance), aJsonFile);
 			}
 
 
@@ -150,7 +150,8 @@ namespace Reflect
 		};
 
 		template<template<typename...> class Tmpl, typename ...Args>
-		struct is_template<Tmpl<Args...>> : std::true_type {
+		struct is_template<Tmpl<Args...>> : std::true_type
+		{
 
 		};
 
@@ -160,7 +161,9 @@ namespace Reflect
 
 		template<typename ...Ts, typename T>
 		struct tuple_holds<std::tuple<Ts...>, T>
-			: std::disjunction<std::is_same<Ts, T>...> {};
+			: std::disjunction<std::is_same<Ts, T>...>
+		{
+		};
 
 
 

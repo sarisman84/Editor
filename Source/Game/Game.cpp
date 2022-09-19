@@ -2,7 +2,11 @@
 #include <tge/engine.h>
 #include "Game.h"
 
+#include <functional>
 #include <tge/error/ErrorManager.h>
+
+
+#include "SR/ReflectHelper.h"
 
 using namespace std::placeholders;
 
@@ -24,10 +28,13 @@ Game::Game()
 
 Game::~Game()
 {
+	
 }
 
 LRESULT Game::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	Tga::Engine::GetInstance()->OnCustomWinProcCallback(hWnd, message, wParam, lParam);
+
 	lParam;
 	wParam;
 	hWnd;
@@ -46,13 +53,19 @@ LRESULT Game::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-bool Game::Init(const std::wstring& aVersion, HWND /*aHWND*/)
+bool Game::Init(const std::wstring& aVersion, HWND /*aHWND*/, std::function<void(GameWorld*)> anOnUpdateCallback)
 {
 	Tga::EngineCreateParameters createParameters;
 
-	createParameters.myInitFunctionToCall = [this] {InitCallBack(); };
-	createParameters.myWinProcCallback = [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {return WinProc(hWnd, message, wParam, lParam); };
-	createParameters.myUpdateFunctionToCall = [this] {UpdateCallBack(); };
+	createParameters.myInitFunctionToCall = [this] { InitCallBack(); };
+	createParameters.myWinProcCallback = [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { return WinProc(hWnd, message, wParam, lParam); };
+	createParameters.myUpdateFunctionToCall = [&anOnUpdateCallback, this]
+	{
+		if (anOnUpdateCallback)
+			anOnUpdateCallback(&myGameWorld);
+
+		UpdateCallBack();
+	};
 	createParameters.myApplicationName = L"TGA 2D " + BUILD_NAME + L"[" + aVersion + L"] ";
 	//createParameters.myPreferedMultiSamplingQuality = Tga::EMultiSamplingQuality::High;
 	createParameters.myActivateDebugSystems = Tga::DebugFeature::Fps |
@@ -75,6 +88,8 @@ bool Game::Init(const std::wstring& aVersion, HWND /*aHWND*/)
 
 void Game::InitCallBack()
 {
+	Reflect::DeserializeMembers<GameWorld>(&myGameWorld, "propertyMemberData.json");
+
 	myGameWorld.Init();
 }
 
@@ -82,4 +97,5 @@ void Game::UpdateCallBack()
 {
 	myGameWorld.Update(Tga::Engine::GetInstance()->GetDeltaTime());
 	myGameWorld.Render();
+	Reflect::SerializeMembers<GameWorld>(&myGameWorld, "propertyMemberData.json");
 }

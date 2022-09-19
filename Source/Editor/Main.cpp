@@ -92,7 +92,6 @@ void Init()
 		versionNumber += L",";
 	}
 	versionNumber.pop_back();
-	myEditor.Init();
 
 
 

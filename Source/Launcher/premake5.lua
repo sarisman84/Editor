@@ -20,7 +20,8 @@ project "Launcher"
 
 	includedirs {
 		"../Engine",
-		"../Game/"
+		"../Game/",
+		"../External/"
 	}
 
 	libdirs { "../../Lib/" }

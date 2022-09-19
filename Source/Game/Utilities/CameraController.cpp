@@ -30,7 +30,7 @@ void CameraController::Initialize(float aMovementSpeedAmm, float aRotationSpeedA
 	myTransform = myCamera->GetTransform();
 
 
-	Tga::Engine::GetInstance()->AddWinProcCallback([](HWND aWinInstance, UINT aMessage, WPARAM anWParam, LPARAM anLParam)
+	Tga::Engine::GetInstance()->AddWinProcCallback([](HWND aWinInstance, UINT aMessage, WPARAM anWParam, LPARAM anLParam) -> HRESULT
 		{
 			using CommonUtilities::Keyboard;
 			using CommonUtilities::Mouse;
@@ -39,6 +39,8 @@ void CameraController::Initialize(float aMovementSpeedAmm, float aRotationSpeedA
 			anLParam;
 			Keyboard::Update(aMessage, anWParam, anLParam);
 			Mouse::UpdateEvents(aWinInstance, aMessage, anWParam, anLParam);
+
+			return 0;
 		});
 }
 

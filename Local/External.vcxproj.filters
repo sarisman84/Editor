@@ -13,6 +13,9 @@
     <Filter Include="DirectXTex\WICTextureLoader">
       <UniqueIdentifier>{C3C4F026-2FD2-1E0D-B8B8-1AF824C5EAC3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dragonite">
+      <UniqueIdentifier>{A278A63B-0EE3-5AB2-5721-0C58C3CA3807}</UniqueIdentifier>
+    </Filter>
     <Filter Include="StackWalker">
       <UniqueIdentifier>{21FD7E7C-8DB2-F771-16A7-F148825BEE75}</UniqueIdentifier>
     </Filter>
@@ -127,6 +130,9 @@
     <Filter Include="imgui\misc\single_file">
       <UniqueIdentifier>{4B942DFF-378E-5651-20FB-EC610C94BCBD}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nlohmann">
+      <UniqueIdentifier>{E0661284-CC33-6D8F-F54C-5B37E178A21D}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\External\DirectXTex\DDSTextureLoader\DDSTextureLoader11.h">
@@ -137,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\External\DirectXTex\WICTextureLoader\WICTextureLoader11.h">
       <Filter>DirectXTex\WICTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\External\Dragonite\Input.h">
+      <Filter>Dragonite</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\External\StackWalker\StackWalker.h">
       <Filter>StackWalker</Filter>
@@ -1576,6 +1585,9 @@
     <ClInclude Include="..\Source\External\imgui\misc\single_file\imgui_single_file.h">
       <Filter>imgui\misc\single_file</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\External\nlohmann\json.hpp">
+      <Filter>nlohmann</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\External\DirectXTex\DDSTextureLoader\DDSTextureLoader11.cpp">
@@ -1586,6 +1598,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\External\DirectXTex\WICTextureLoader\WICTextureLoader11.cpp">
       <Filter>DirectXTex\WICTextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\External\Dragonite\Input.cpp">
+      <Filter>Dragonite</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\External\StackWalker\StackWalker.cpp">
       <Filter>StackWalker</Filter>

@@ -11,10 +11,10 @@
 GameWorld::GameWorld()
 {}
 
-GameWorld::~GameWorld() 
+GameWorld::~GameWorld()
 {}
 
-void GameWorld::Init()  
+void GameWorld::Init()
 {
 	myTga2dLogoTexture = Tga::Engine::GetInstance()->GetTextureManager().GetTexture(L"sprites/tga_logo.dds");
 }
@@ -35,8 +35,9 @@ void GameWorld::Render()
 	// Create instance data. 
 	Tga::Sprite2DInstanceData spriteInstance = {};
 	spriteInstance.myPivot = { 0.5f, 0.5f };
-	spriteInstance.myPosition = Tga::Vector2f{ 0.5f, 0.5f }*resolution;
+	spriteInstance.myPosition = (Tga::Vector2f{ 0.5f, 0.5f } + myLogoPosition) * resolution;
 	spriteInstance.mySize = Tga::Vector2f{ 0.75f, 0.75f }*resolution.y;
+	spriteInstance.myRotation = myLogoRotation;
 
 	spriteDrawer.Draw(sharedData, spriteInstance);
 }

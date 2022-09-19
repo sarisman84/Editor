@@ -23,7 +23,44 @@ static int DefaultResizeCallback(ImGuiInputTextCallbackData* data)
 
 #pragma region TGA DEFINES
 template<>
-inline auto Reflect::RegisterElement <Tga::Vector3f>()
+inline auto Reflect::RegisterElement <Tga::Vector4<float>>()
+{
+	return Class("Vector4 Float",
+		Member("X", &Tga::Vector4f::x),
+		Member("Y", &Tga::Vector4f::y),
+		Member("Z", &Tga::Vector4f::z),
+		Member("W", &Tga::Vector4f::w)
+	);
+}
+
+template<>
+inline void Reflect::SerializeElement<Tga::Vector4<float>>(const std::string& anID, const Tga::Vector4f& aVal, json& aJsonIns)
+{
+	aJsonIns[anID]["X"] = aVal.X;
+	aJsonIns[anID]["Y"] = aVal.Y;
+	aJsonIns[anID]["Z"] = aVal.Z;
+	aJsonIns[anID]["W"] = aVal.W;
+}
+template<>
+inline void Reflect::DeserializeElement<Tga::Vector4<float>>(const std::string& anID, Tga::Vector4f& aVal, const json& aJsonIns)
+{
+	if (!aJsonIns.contains(anID)) return;
+
+	if (!aJsonIns[anID].contains("X") ||
+		!aJsonIns[anID].contains("Y") ||
+		!aJsonIns[anID].contains("Z") ||
+		!aJsonIns[anID].contains("W")) return;
+
+	aVal.X = aJsonIns[anID]["X"];
+	aVal.Y = aJsonIns[anID]["Y"];
+	aVal.Z = aJsonIns[anID]["Z"];
+	aVal.W = aJsonIns[anID]["W"];
+}
+
+
+
+template<>
+inline auto Reflect::RegisterElement <Tga::Vector3<float>>()
 {
 	return Class("Vector3 Float",
 		Member("X", &Tga::Vector3f::x),
@@ -33,24 +70,31 @@ inline auto Reflect::RegisterElement <Tga::Vector3f>()
 }
 
 template<>
-inline void Reflect::SerializeElement<Tga::Vector3f>(const std::string& anID, const Tga::Vector3f& aVal, json& aJsonIns)
+inline void Reflect::SerializeElement<Tga::Vector3<float>>(const std::string& anID, const Tga::Vector3f& aVal, json& aJsonIns)
 {
-	aJsonIns[anID]["X"] = aVal.x;
-	aJsonIns[anID]["Y"] = aVal.y;
-	aJsonIns[anID]["Z"] = aVal.z;
+	aJsonIns[anID]["X"] = aVal.X;
+	aJsonIns[anID]["Y"] = aVal.Y;
+	aJsonIns[anID]["Z"] = aVal.Z;
+}
+template<>
+inline void Reflect::DeserializeElement<Tga::Vector3<float>>(const std::string& anID, Tga::Vector3f& aVal, const json& aJsonIns)
+{
+	if (!aJsonIns.contains(anID)) return;
+
+	if (!aJsonIns[anID].contains("X") ||
+		!aJsonIns[anID].contains("Y") ||
+		!aJsonIns[anID].contains("Z")) return;
+
+	aVal.X = aJsonIns[anID]["X"];
+	aVal.Y = aJsonIns[anID]["Y"];
+	aVal.Z = aJsonIns[anID]["Z"];
 }
 
-template<>
-inline void Reflect::DeserializeElement<Tga::Vector3f>(const std::string& anID, Tga::Vector3f& aVal, const json& aJsonIns)
-{
-	aVal.x = aJsonIns[anID]["X"];
-	aVal.y = aJsonIns[anID]["Y"];
-	aVal.z = aJsonIns[anID]["Z"];
-}
+
 
 
 template<>
-inline auto Reflect::RegisterElement <Tga::Vector2f>()
+inline auto Reflect::RegisterElement <Tga::Vector2<float>>()
 {
 	return Class("Vector2 Float",
 		Member("X", &Tga::Vector2f::x),
@@ -59,18 +103,21 @@ inline auto Reflect::RegisterElement <Tga::Vector2f>()
 }
 
 template<>
-inline void Reflect::SerializeElement<Tga::Vector2f>(const std::string& anID, const Tga::Vector2f& aVal, json& aJsonIns)
+inline void Reflect::SerializeElement<Tga::Vector2<float>>(const std::string& anID, const Tga::Vector2f& aVal, json& aJsonIns)
 {
 	aJsonIns[anID]["X"] = aVal.x;
 	aJsonIns[anID]["Y"] = aVal.y;
 }
-
 template<>
-inline void Reflect::DeserializeElement<Tga::Vector2f>(const std::string& anID, Tga::Vector2f& aVal, const json& aJsonIns)
+inline void Reflect::DeserializeElement<Tga::Vector2<float>>(const std::string& anID, Tga::Vector2f& aVal, const json& aJsonIns)
 {
+	if (!aJsonIns.contains(anID)) return;
+	if (!aJsonIns[anID].contains("X") || !aJsonIns[anID].contains("Y")) return;
 	aVal.x = aJsonIns[anID]["X"];
 	aVal.y = aJsonIns[anID]["Y"];
 }
+
+
 
 
 
@@ -85,6 +132,7 @@ inline auto Reflect::RegisterElement <Tga::Color>()
 	);
 }
 
+
 template<>
 inline void Reflect::SerializeElement<Tga::Color>(const std::string& anID, const Tga::Color& aVal, json& aJsonIns)
 {
@@ -93,16 +141,23 @@ inline void Reflect::SerializeElement<Tga::Color>(const std::string& anID, const
 	aJsonIns[anID]["B"] = aVal.myB;
 	aJsonIns[anID]["A"] = aVal.myA;
 }
-
-
 template<>
 inline void Reflect::DeserializeElement<Tga::Color>(const std::string& anID, Tga::Color& aVal, const json& aJsonIns)
 {
+	if (!aJsonIns.contains(anID)) return;
+
+	if (!aJsonIns[anID].contains("R") ||
+		!aJsonIns[anID].contains("G") ||
+		!aJsonIns[anID].contains("B") ||
+		!aJsonIns[anID].contains("A")) return;
+
 	aVal.myR = aJsonIns[anID]["R"];
 	aVal.myG = aJsonIns[anID]["G"];
 	aVal.myB = aJsonIns[anID]["B"];
 	aVal.myA = aJsonIns[anID]["A"];
 }
+
+
 
 
 #pragma endregion

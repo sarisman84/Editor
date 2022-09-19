@@ -18,6 +18,7 @@ public:
 
 	Tga::Vector2f myLogoPosition;
 	float myLogoRotation;
+	std::vector<Tga::Vector2f> myTest;
 
 private:
 	Tga::Texture* myTga2dLogoTexture;
@@ -32,7 +33,8 @@ inline auto Reflect::RegisterElement<GameWorld>()
 {
 	return Class("Game World",
 		Member("Logo Position", &GameWorld::myLogoPosition),
-		Member("Logo Rotation", &GameWorld::myLogoRotation)
+		Member("Logo Rotation", &GameWorld::myLogoRotation),
+		Member("Test", &GameWorld::myTest)
 	);
 }
 

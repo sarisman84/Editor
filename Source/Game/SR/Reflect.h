@@ -28,15 +28,14 @@ namespace Reflect
 	}
 
 	template<typename T>
-	inline void SerializeElement(const std::string& anID, const T& aVal, json& aJsonIns)
+	inline void SerializeElement(const std::string& /*anID*/, const T& /*aVal*/, json& /*aJsonIns*/)
 	{
-		aJsonIns[anID] = aVal;
 	}
 
 	template<typename T>
-	inline void DeserializeElement(const std::string& anID, T& aVal, const json& aJsonIns)
+	inline void DeserializeElement(const std::string& /*anID*/, T& /*aVal*/, const json& /*aJsonIns*/)
 	{
-		aVal = aJsonIns[anID];
+
 	}
 
 
@@ -156,6 +155,19 @@ namespace Reflect
 		};
 
 
+		template<typename Test, template<typename...> class Ref>
+		struct is_specialization : std::false_type
+		{
+
+		};
+
+		template<template<typename...> class Ref, typename... Args>
+		struct is_specialization<Ref<Args...>, Ref> : std::true_type
+		{
+
+		};
+
+
 		template<typename, typename>
 		struct tuple_holds;
 
@@ -178,11 +190,38 @@ namespace Reflect
 						using MemberType = decltype(member)::MType;
 						using TupleType = decltype(RegisterElement<MemberType>());
 
+
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
-							SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), aJsonFile);
+						{
+							json childElement = aJsonFile[member.GetName()];
+							SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+						}
 
-						member.WriteToJson(anInstance, aJsonFile);
 
+						if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
+						{
+
+							MemberType* val = member.GetValue(anInstance);
+							json vector = aJsonFile["Vector"];
+							vector["size"] = val->size();
+							for (size_t i = 0; i < val->size(); i++)
+							{
+								using ListType = MemberType::value_type;
+
+								ListType& element = val->at(i);
+
+								std::string name = "Element ";
+								name += std::to_string(i);
+
+								json childElement = vector[name];
+								SerializeMembers_Impl<ListType>(&element, childElement);
+							}/**/
+
+						}
+						else
+						{
+							member.WriteToJson(anInstance, aJsonFile);
+						}
 					}
 				});
 
@@ -200,11 +239,37 @@ namespace Reflect
 						using MemberType = decltype(member)::MType;
 						using TupleType = decltype(RegisterElement<MemberType>());
 
+
+
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
-							DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), aJsonFile);
+						{
+							json childElement = aJsonFile[member.GetName()];
+							DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+						}
 
-						member.ReadFromJson(anInstance, aJsonFile);
+						if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
+						{
+							MemberType* val = member.GetValue(anInstance);
+							json vector = aJsonFile["Vector"];
+							val->resize(vector["size"]);
 
+							for (size_t i = 0; i < val->size(); i++)
+							{
+								using ListType = MemberType::value_type;
+
+								ListType& element = val->at(i);
+
+								std::string name = "Element ";
+								name += std::to_string(i);
+
+								json childElement = vector[name];
+								DeserializeMembers_Impl<ListType>(&element, childElement);
+							}/**/
+						}
+						else
+						{
+							member.ReadFromJson(anInstance, aJsonFile);
+						}
 					}
 				});
 
@@ -250,6 +315,8 @@ namespace Reflect
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 						IterateMembers<MemberType>(member.GetValue(anInstance), aCallback);
 
+
+
 					aCallback(anInstance, member);
 				}
 
@@ -271,7 +338,46 @@ namespace Reflect
 
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 							InspectMembers<MemberType>(member.GetValue(anInstance), member.GetName());
-						InspectElement<MemberType>(member.GetName(), member.GetValue(anInstance));
+						//std::cout << member.GetName() << ": " << typeid(MemberType).name() << "->" << Internal::is_specialization<MemberType, std::vector>::value << std::endl;
+						if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
+						{
+							if (ImGui::TreeNode(member.GetName()))
+							{
+								MemberType* val = member.GetValue(anInstance);
+								/*auto& val = *member.GetValue(GetValue);
+								*/
+
+
+
+								for (size_t i = 0; i < val->size(); i++)
+								{
+									using ListType = MemberType::value_type;
+
+									ListType& element = val->at(i);
+
+
+
+
+
+
+									std::string name = "Element ";
+									name += std::to_string(i);
+
+									InspectMembers<ListType>(&element, name.c_str());
+								}/**/
+
+
+								if (ImGui::Button("Add"))
+								{
+									val->emplace_back();
+								}
+
+								ImGui::TreePop();
+							}
+
+						}
+						else
+							InspectElement<MemberType>(member.GetName(), member.GetValue(anInstance));
 
 					}
 				});
@@ -296,10 +402,20 @@ namespace Reflect
 					using MemberType = decltype(member)::MType;
 					using TupleType = decltype(RegisterElement<MemberType>());
 
+
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
-						Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), jsonIns);
+					{
+						json childElement = jsonIns[member.GetName()];
+						if (childElement.is_null())
+							childElement = json::object({ {member.GetName(), nullptr} });
+						Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+					}
+
 
 					member.WriteToJson(anInstance, jsonIns);
+
+
+
 
 				}
 			});
@@ -330,10 +446,16 @@ namespace Reflect
 					using MemberType = decltype(member)::MType;
 					using TupleType = decltype(RegisterElement<MemberType>());
 
+
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
-						Internal::DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), jsonIns);
+					{
+						json childElement = jsonIns[member.GetName()];
+						Internal::DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+					}
 
 					member.ReadFromJson(anInstance, jsonIns);
+
+
 
 				}
 			});

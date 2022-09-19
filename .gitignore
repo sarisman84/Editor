@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+
+#Custom
+Source/Tutorials
+
 # User-specific files
 *.rsuser
 *.suo
@@ -347,3 +351,47 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+Local/Tutorial-01_Init.vcxproj
+
+Local/Tutorial-02_Sprite.vcxproj
+
+Local/Tutorial-03_SpriteBatch.vcxproj
+
+Local/Tutorial-04_Text.vcxproj
+
+Local/Tutorial-04_Text.vcxproj.filters
+
+Local/Tutorial-05_Light.vcxproj
+
+Local/Tutorial-06_CustomShapes.vcxproj
+
+Local/Tutorial-06_CustomShapes.vcxproj.filters
+
+Local/Tutorial-07_RenderTarget.vcxproj
+
+Local/Tutorial-07_RenderTarget.vcxproj.filters
+
+Local/Tutorial-08_Debug.vcxproj
+
+Local/Tutorial-09_Spritesheets.vcxproj
+
+Local/Tutorial-10_CustomShader.vcxproj
+
+Local/Tutorial-10_CustomShader.vcxproj.filters
+
+Local/Tutorial-11_SkinnedAnimation.vcxproj
+
+Local/Tutorial-12_Audio.vcxproj
+
+Local/Tutorial-13_Gamepad.vcxproj
+
+Local/Tutorial-14_Threading.vcxproj
+
+Local/Tutorial-15_Imgui.vcxproj
+
+Local/Tutorial-16_3D_Models.vcxproj
+
+Local/Tutorial-17_PBR.vcxproj
+
+Tutorial.sln

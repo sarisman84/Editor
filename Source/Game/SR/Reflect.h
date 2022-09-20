@@ -191,9 +191,6 @@ namespace Reflect
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 						{
 							json& childElement = aJsonFile[member.GetName()];
-							if (childElement.is_null())
-								childElement = json::object({ {member.GetName(), nullptr} });
-
 							Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 						}
 
@@ -245,8 +242,6 @@ namespace Reflect
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 						{
 							json& childElement = aJsonFile[member.GetName()];
-
-
 							Internal::DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 
 
@@ -416,8 +411,6 @@ namespace Reflect
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 					{
 						json& childElement = jsonIns[member.GetName()];
-						if (childElement.is_null())
-							childElement = json::object({ {member.GetName(), nullptr} });
 						Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 					}
 

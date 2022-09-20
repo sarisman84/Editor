@@ -134,10 +134,6 @@ void SceneRendering::Render(const Scene& aNewScene, const CameraController& aCam
 		}
 	}
 
-
-
-
-
 }
 
 

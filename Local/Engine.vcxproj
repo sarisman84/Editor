@@ -200,6 +200,7 @@
     <ClInclude Include="..\Source\Engine\tge\graphics\PointLight.h" />
     <ClInclude Include="..\Source\Engine\tge\graphics\RenderStateManager.h" />
     <ClInclude Include="..\Source\Engine\tge\graphics\RenderTarget.h" />
+    <ClInclude Include="..\Source\Engine\tge\graphics\Spotlight.h" />
     <ClInclude Include="..\Source\Engine\tge\graphics\TextureResource.h" />
     <ClInclude Include="..\Source\Engine\tge\graphics\Vertex.h" />
     <ClInclude Include="..\Source\Engine\tge\imguiinterface\ImGuiInterface.h" />

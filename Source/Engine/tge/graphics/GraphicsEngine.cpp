@@ -76,7 +76,7 @@ bool GraphicsEngine::Init()
 	if (!myFullscreenHorizontalGaussianBlur->Init("Shaders/PostprocessGaussianH_PS.cso"))
 		return false;
 	myFullscreenPixelateEffect = std::make_unique<FullscreenPixelateEffect>();
-	if(!myFullscreenPixelateEffect->Init("Shaders/PostprocessPixelate_PS.cso"))
+	if (!myFullscreenPixelateEffect->Init("Shaders/PostprocessPixelate_PS.cso"))
 		return false;
 
 	HRESULT result = S_OK;
@@ -123,13 +123,13 @@ void Tga::GraphicsEngine::UpdateDefaultCamera()
 {
 	if (myUseDefaultCamera)
 	{
-		myCamera->SetOrtographicProjection(0.0f, (float)DX11::GetResolution().x, 0.0f, (float)DX11::GetResolution().y, -1.0f, 1.f);
+		myCamera->SetOrtographicProjection(0.0f, (float)DX11::GetResolution().x, 0.0f, (float)DX11::GetResolution().y, 0.0f, 1.f);
 	}
 }
 
 void Tga::GraphicsEngine::ResetToDefaultCamera()
 {
-	myCamera->SetOrtographicProjection(0.0f,(float)DX11::GetResolution().x, 0.0f,(float)DX11::GetResolution().y, -1.0f,1.f);
+	myCamera->SetOrtographicProjection(0.0f, (float)DX11::GetResolution().x, 0.0f, (float)DX11::GetResolution().y, 0.0f, 1.f);
 	myCamera->SetTransform(Transform());
 
 	myUseDefaultCamera = true;
@@ -198,21 +198,31 @@ void Tga::GraphicsEngine::UpdateAndBindLightBuffer()
 			return;
 		}
 
-		size_t pointLightCount = Engine::GetInstance()->GetLightManager().GetPointLightCount();
-		const PointLight* pointLights = Engine::GetInstance()->GetLightManager().GetPointLights();
+		auto& lm = Engine::GetInstance()->GetLightManager();
+
+		size_t lightCount = lm.GetLightCount();
+		const Light* lights = lm.GetLights();
+
 		dataPtrLights = (LightConstantBufferData*)mappedResourceLight.pData;
 		*dataPtrLights = {};
 
-		dataPtrLights->myNumberOfLights = static_cast<unsigned int>(pointLightCount);
+		dataPtrLights->myNumberOfLights = static_cast<unsigned int>(lightCount);
 
-		for (int i = 0; i < pointLightCount; i++)
+		for (int i = 0; i < lightCount; i++)
 		{
-			const PointLight& pointLight = pointLights[i];
-			dataPtrLights->myPointLights[i].myColorAndIntensity = pointLight.GetColor().AsLinearVec4();
-			dataPtrLights->myPointLights[i].myColorAndIntensity.w = pointLight.GetIntensity();
-			dataPtrLights->myPointLights[i].myRange = pointLight.GetRange();
-			dataPtrLights->myPointLights[i].myPosition = pointLight.GetTransform().GetPosition();
+			const Light& light = lights[i];
+			dataPtrLights->myLights[i].myColorAndIntensity = light.GetColor().AsLinearVec4();
+			dataPtrLights->myLights[i].myColorAndIntensity.w = light.GetIntensity();
+			dataPtrLights->myLights[i].myRange = light.GetRange();
+			dataPtrLights->myLights[i].myPosition = light.GetTransform().GetPosition();
+			dataPtrLights->myLights[i].myFacingDirection = light.GetTransform().GetPosition();
+			dataPtrLights->myLights[i].myPosition = light.GetTransform().GetPosition();
+			dataPtrLights->myLights[i].myFacingDirection = light.GetTransform().GetMatrix().GetForward();
+			dataPtrLights->myLights[i].myInnerAngle = light.GetInnerCone();
+			dataPtrLights->myLights[i].myOuterAngle = light.GetOuterCone();
 		}
+
+	
 
 		const DirectionalLight& directionalLight = Engine::GetInstance()->GetLightManager().GetDirectionalLight();
 		const AmbientLight& ambientLight = Engine::GetInstance()->GetLightManager().GetAmbientLight();

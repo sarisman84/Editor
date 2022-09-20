@@ -9,7 +9,7 @@ CameraController::CameraController() = default;
 
 
 
-void CameraController::Initialize(float aMovementSpeedAmm, float aRotationSpeedAmm, float someFOV, float aMinPlaneVal, float aFarPlaneVal)
+void CameraController::Initialize(float /*aMovementSpeedAmm*/, float /*aRotationSpeedAmm*/, float someFOV, float aMinPlaneVal, float aFarPlaneVal)
 {
 	using CommonUtilities::Mouse;
 
@@ -22,8 +22,6 @@ void CameraController::Initialize(float aMovementSpeedAmm, float aRotationSpeedA
 
 	myCamera->SetPerspectiveProjection(someFOV, resolution, aMinPlaneVal, aFarPlaneVal);
 
-	myRotationSpeed = aRotationSpeedAmm;
-	myMovementSpeed = aMovementSpeedAmm;
 
 	mySprintMultipler = 3.0f;
 

@@ -17,6 +17,7 @@
     <ClInclude Include="..\Source\Game\SR\ReflectHelper.h">
       <Filter>SR</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Game\SceneRenderer.h" />
     <ClInclude Include="..\Source\Game\Utilities\CameraController.h">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -33,6 +34,7 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Game\Game.cpp" />
     <ClCompile Include="..\Source\Game\GameWorld.cpp" />
+    <ClCompile Include="..\Source\Game\SceneRenderer.cpp" />
     <ClCompile Include="..\Source\Game\Utilities\CameraController.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>

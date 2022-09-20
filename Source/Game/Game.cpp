@@ -28,7 +28,7 @@ Game::Game()
 
 Game::~Game()
 {
-	
+
 }
 
 LRESULT Game::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -58,7 +58,18 @@ bool Game::Init(const std::wstring& aVersion, HWND /*aHWND*/, std::function<void
 	Tga::EngineCreateParameters createParameters;
 
 	createParameters.myInitFunctionToCall = [this] { InitCallBack(); };
-	createParameters.myWinProcCallback = [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { return WinProc(hWnd, message, wParam, lParam); };
+	createParameters.myWinProcCallback = [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		switch (message)
+		{
+			// this message is read when the window is closed
+		case WM_DESTROY:
+		{
+			Reflect::SerializeMembers<GameWorld>(&myGameWorld, "propertyMemberData.json");
+		}
+		}
+		return WinProc(hWnd, message, wParam, lParam);
+	};
 	createParameters.myUpdateFunctionToCall = [&anOnUpdateCallback, this]
 	{
 		if (anOnUpdateCallback)
@@ -97,5 +108,5 @@ void Game::UpdateCallBack()
 {
 	myGameWorld.Update(Tga::Engine::GetInstance()->GetDeltaTime());
 	myGameWorld.Render();
-	Reflect::SerializeMembers<GameWorld>(&myGameWorld, "propertyMemberData.json");
+
 }

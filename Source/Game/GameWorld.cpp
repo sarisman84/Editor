@@ -7,6 +7,8 @@
 #include <tge/drawers/SpriteDrawer.h>
 #include <tge/texture/TextureManager.h>
 #include <tge/drawers/ModelDrawer.h>
+#include <tge/model/ModelFactory.h>
+#include <tge/model/ModelInstance.h>
 
 GameWorld::GameWorld()
 {}
@@ -16,7 +18,7 @@ GameWorld::~GameWorld()
 
 void GameWorld::Init()
 {
-	myTga2dLogoTexture = Tga::Engine::GetInstance()->GetTextureManager().GetTexture(L"sprites/tga_logo.dds");
+	myCamera.Initialize(0,0);
 }
 void GameWorld::Update(float aTimeDelta)
 {
@@ -25,19 +27,19 @@ void GameWorld::Update(float aTimeDelta)
 
 void GameWorld::Render()
 {
-	Tga::SpriteDrawer& spriteDrawer(Tga::Engine::GetInstance()->GetGraphicsEngine().GetSpriteDrawer());
-	Tga::SpriteSharedData sharedData = {};
-	sharedData.myTexture = myTga2dLogoTexture;
+	/*auto& graphicsEngine = Tga::Engine::GetInstance()->GetGraphicsEngine();
 
-	Tga::Vector2ui intResolution = Tga::Engine::GetInstance()->GetRenderSize();
-	Tga::Vector2f resolution = { (float)intResolution.x, (float)intResolution.y };
+	graphicsEngine.SetCamera(*myCamera.GetCamera());
+	auto cpy = myObjects;
+	for (auto& obj : cpy)
+	{
+		auto cube = Tga::ModelFactory::GetInstance().GetUnitCube();
+		cube.SetLocation(obj.myPosition);
+		cube.SetRotation(obj.myRotation);
+		cube.SetScale(obj.mySize);
 
-	// Create instance data. 
-	Tga::Sprite2DInstanceData spriteInstance = {};
-	spriteInstance.myPivot = { 0.5f, 0.5f };
-	spriteInstance.myPosition = (Tga::Vector2f{ 0.5f, 0.5f } + myLogoPosition) * resolution;
-	spriteInstance.mySize = Tga::Vector2f{ 0.75f, 0.75f }*resolution.y;
-	spriteInstance.myRotation = myLogoRotation;
+		graphicsEngine.GetModelDrawer().Draw(cube);
+	}*/
 
-	spriteDrawer.Draw(sharedData, spriteInstance);
+	SceneRendering::Render(myScene, myCamera);
 }

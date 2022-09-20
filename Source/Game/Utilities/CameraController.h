@@ -1,12 +1,15 @@
 #pragma once
 #include <tge/math/Transform.h>
 #include <Dragonite/Input.h>
+#include "../SR/ReflectHelper.h"
 
 namespace Tga {
 	class Camera;
 	class InputManager;
 
 }
+
+
 
 
 class CameraController
@@ -27,6 +30,9 @@ public:
 
 	Tga::Vector3f myPosition;
 	Tga::Vector3f myRotation;
+	float myMovementSpeed;
+	float myRotationSpeed;
+	float mySprintMultipler;
 
 	inline bool& InputState()noexcept
 	{
@@ -38,9 +44,7 @@ private:
 
 	
 	Tga::Transform myTransform;
-	float myMovementSpeed;
-	float myRotationSpeed;
-	float mySprintMultipler;
+	
 	Tga::Rotator myAngularVelocity;
 	Tga::Vector3f myVelocity;
 
@@ -49,3 +53,16 @@ private:
 	Tga::Camera* myCamera = nullptr;
 };
 
+
+
+template<>
+inline auto Reflect::RegisterElement<CameraController>()
+{
+	return Class("Camera Controller",
+		Member("Position", &CameraController::myPosition),
+		Member("Rotation", &CameraController::myRotation),
+		Member("Movement Speed", &CameraController::myMovementSpeed),
+		Member("Rotation Speed", &CameraController::myRotationSpeed),
+		Member("Sprint Multiplier", &CameraController::mySprintMultipler)
+	);
+}

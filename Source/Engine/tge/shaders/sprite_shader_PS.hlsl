@@ -20,10 +20,10 @@ float4 main(SpriteVertexToPixel input) : SV_TARGET
 
 	for (unsigned int index = 0; index < NumberOfLights; index++)
 	{
-		float Intensity = myPointLights[index].Color.w;
-		float Falloff = myPointLights[index].Range;
+		float Intensity = myLights[index].Color.w;
+        float Falloff = myLights[index].Range;
 
-		float3 difference = float3((myPointLights[index].Position.xyz - input.worldPosition.xyz));
+        float3 difference = float3((myLights[index].Position.xyz - input.worldPosition.xyz));
 
 		float distance = length(difference);
 
@@ -35,8 +35,8 @@ float4 main(SpriteVertexToPixel input) : SV_TARGET
 
 		// need a tbn matrix here...
 		float lambert = max(0.f,dot(direction, Normal));
-		DirectColor += Diffuse.xyz * Intensity * totalAttenuation * myPointLights[index].Color.rgb * lambert;
-	}
+        DirectColor += Diffuse.xyz * Intensity * totalAttenuation * myLights[index].Color.rgb * lambert;
+    }
 
 	#endif
 	

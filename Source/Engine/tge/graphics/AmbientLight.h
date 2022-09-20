@@ -8,23 +8,27 @@ struct ID3D11ShaderResourceView;
 namespace Tga
 {
 
-class AmbientLight : public Light
-{
-	ComPtr<ID3D11ShaderResourceView> myCubemap = nullptr;
-	unsigned int myNumMips = 0;
-	
-public:
-	AmbientLight(const Color& aColor, float aIntensity);
-	AmbientLight(std::wstring& someCubemapLocation, const Color& aColor, float aIntensity);
-	AmbientLight(const AmbientLight&);
-	AmbientLight& operator=(const AmbientLight& other);
+	class AmbientLight : public Light
+	{
+		ComPtr<ID3D11ShaderResourceView> myCubemap = nullptr;
+		unsigned int myNumMips = 0;
 
-	virtual ~AmbientLight();
+	public:
+		AmbientLight(const Color& aColor, float aIntensity);
+		AmbientLight(std::wstring& someCubemapLocation, const Color& aColor, float aIntensity);
+		AmbientLight(const AmbientLight&);
+		AmbientLight& operator=(const AmbientLight& other);
 
-	void SetCubemap(std::wstring& someCubemapLocation);
+		virtual ~AmbientLight();
 
-	FORCEINLINE ID3D11ShaderResourceView* const* GetCubemap() const { return myCubemap.GetAddressOf(); }
-	FORCEINLINE unsigned int GetNumMips() const { return myNumMips; }
-};
+		void SetCubemap(std::wstring& someCubemapLocation);
+
+		FORCEINLINE ID3D11ShaderResourceView* const* GetCubemap() const { return myCubemap.GetAddressOf(); }
+		FORCEINLINE unsigned int GetNumMips() const { return myNumMips; }
+
+
+
+		
+	};
 
 } // namespace Tga

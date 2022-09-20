@@ -4,6 +4,7 @@
 #include "SR/ReflectHelper.h"
 #include <nlohmann/json.hpp>
 #include <imgui/imgui.h>
+#include <Dragonite/Input.h>
 
 void Editor::Update(GameWorld* aGameWorld)
 {
@@ -17,6 +18,15 @@ void Editor::Update(GameWorld* aGameWorld)
 	ImGui::End();
 
     EndDocker();
+
+
+    using CommonUtilities::Keyboard;
+
+    if (Keyboard::GetButton(Keyboard::Key::Control) && Keyboard::GetButton(Keyboard::Key::S))
+    {
+        Reflect::SerializeMembers<GameWorld>(aGameWorld, "propertyMemberData.json");
+    }
+
 }
 
 void Editor::BeginDocker()

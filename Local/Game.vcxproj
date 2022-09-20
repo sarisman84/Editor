@@ -158,6 +158,7 @@
     <ClInclude Include="..\Source\Game\GameWorld.h" />
     <ClInclude Include="..\Source\Game\SR\Reflect.h" />
     <ClInclude Include="..\Source\Game\SR\ReflectHelper.h" />
+    <ClInclude Include="..\Source\Game\SceneRenderer.h" />
     <ClInclude Include="..\Source\Game\Utilities\CameraController.h" />
     <ClInclude Include="..\Source\Game\Utilities\Debug.h" />
     <ClInclude Include="..\Source\Game\Utilities\PropertyInterface.h" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Game\Game.cpp" />
     <ClCompile Include="..\Source\Game\GameWorld.cpp" />
+    <ClCompile Include="..\Source\Game\SceneRenderer.cpp" />
     <ClCompile Include="..\Source\Game\Utilities\CameraController.cpp" />
     <ClCompile Include="..\Source\Game\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

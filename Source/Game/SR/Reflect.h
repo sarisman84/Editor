@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <string> 
+#include <fstream>
 
 
 #pragma warning (disable: 4180)
@@ -145,26 +146,22 @@ namespace Reflect
 		template<typename>
 		struct is_template : std::false_type
 		{
-
 		};
 
 		template<template<typename...> class Tmpl, typename ...Args>
 		struct is_template<Tmpl<Args...>> : std::true_type
 		{
-
 		};
 
 
 		template<typename Test, template<typename...> class Ref>
 		struct is_specialization : std::false_type
 		{
-
 		};
 
 		template<template<typename...> class Ref, typename... Args>
 		struct is_specialization<Ref<Args...>, Ref> : std::true_type
 		{
-
 		};
 
 
@@ -193,8 +190,11 @@ namespace Reflect
 
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 						{
-							json childElement = aJsonFile[member.GetName()];
-							SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+							json& childElement = aJsonFile[member.GetName()];
+							if (childElement.is_null())
+								childElement = json::object({ {member.GetName(), nullptr} });
+
+							Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 						}
 
 
@@ -202,8 +202,9 @@ namespace Reflect
 						{
 
 							MemberType* val = member.GetValue(anInstance);
-							json vector = aJsonFile["Vector"];
-							vector["size"] = val->size();
+
+							aJsonFile[member.GetName()]["size"] = val->size();
+							json& vector = aJsonFile[member.GetName()];
 							for (size_t i = 0; i < val->size(); i++)
 							{
 								using ListType = MemberType::value_type;
@@ -213,9 +214,9 @@ namespace Reflect
 								std::string name = "Element ";
 								name += std::to_string(i);
 
-								json childElement = vector[name];
-								SerializeMembers_Impl<ListType>(&element, childElement);
-							}/**/
+
+								Internal::SerializeMembers_Impl<ListType>(&element, vector[name]);
+							}
 
 						}
 						else
@@ -243,15 +244,20 @@ namespace Reflect
 
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 						{
-							json childElement = aJsonFile[member.GetName()];
-							DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+							json& childElement = aJsonFile[member.GetName()];
+
+
+							Internal::DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
+
+
 						}
 
 						if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
 						{
 							MemberType* val = member.GetValue(anInstance);
-							json vector = aJsonFile["Vector"];
-							val->resize(vector["size"]);
+							json vector = aJsonFile[member.GetName()];
+							if (vector.contains("size"))
+								val->resize(vector["size"]);
 
 							for (size_t i = 0; i < val->size(); i++)
 							{
@@ -263,7 +269,7 @@ namespace Reflect
 								name += std::to_string(i);
 
 								json childElement = vector[name];
-								DeserializeMembers_Impl<ListType>(&element, childElement);
+								Internal::DeserializeMembers_Impl<ListType>(&element, childElement);
 							}/**/
 						}
 						else
@@ -323,6 +329,11 @@ namespace Reflect
 			});
 	}
 
+	/*template <typename T> //TODO: Use templates!
+	void InspectMembers(std::shared_ptr<T>& aptr, const char* aName) 
+	{
+
+	}*/
 
 	template<typename TClass>
 	void InspectMembers(TClass* anInstance, const char* aName)
@@ -335,19 +346,22 @@ namespace Reflect
 					{
 						using MemberType = decltype(member)::MType;
 						using TupleType = decltype(RegisterElement<MemberType>());
-
+						std::cout << "Element: " << member.GetName() << " is " << typeid(MemberType).name() << std::endl;
 						if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
-							InspectMembers<MemberType>(member.GetValue(anInstance), member.GetName());
+						{
+							if constexpr (Internal::is_specialization<MemberType, std::shared_ptr>::value)
+								Reflect::InspectMembers<MemberType>(member.GetValue(anInstance)->get(), member.GetName());
+							else
+								Reflect::InspectMembers<MemberType>(member.GetValue(anInstance), member.GetName());
+
+						}
+
 						//std::cout << member.GetName() << ": " << typeid(MemberType).name() << "->" << Internal::is_specialization<MemberType, std::vector>::value << std::endl;
 						if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
 						{
 							if (ImGui::TreeNode(member.GetName()))
 							{
 								MemberType* val = member.GetValue(anInstance);
-								/*auto& val = *member.GetValue(GetValue);
-								*/
-
-
 
 								for (size_t i = 0; i < val->size(); i++)
 								{
@@ -355,15 +369,10 @@ namespace Reflect
 
 									ListType& element = val->at(i);
 
-
-
-
-
-
 									std::string name = "Element ";
 									name += std::to_string(i);
 
-									InspectMembers<ListType>(&element, name.c_str());
+									Reflect::InspectMembers<ListType>(&element, name.c_str());
 								}/**/
 
 
@@ -389,6 +398,7 @@ namespace Reflect
 	template<typename TClass>
 	void SerializeMembers(TClass* anInstance, const char* aPath)
 	{
+
 		std::ofstream ofs(aPath);
 		if (!ofs || ofs.fail()) return;
 
@@ -405,14 +415,38 @@ namespace Reflect
 
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 					{
-						json childElement = jsonIns[member.GetName()];
+						json& childElement = jsonIns[member.GetName()];
 						if (childElement.is_null())
 							childElement = json::object({ {member.GetName(), nullptr} });
 						Internal::SerializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 					}
 
 
-					member.WriteToJson(anInstance, jsonIns);
+					if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
+					{
+
+						MemberType* val = member.GetValue(anInstance);
+
+						jsonIns[member.GetName()]["size"] = val->size();
+						json& vector = jsonIns[member.GetName()];
+						for (size_t i = 0; i < val->size(); i++)
+						{
+							using ListType = MemberType::value_type;
+
+							ListType& element = val->at(i);
+
+							std::string name = "Element ";
+							name += std::to_string(i);
+
+
+							Internal::SerializeMembers_Impl<ListType>(&element, vector[name]);
+						}/**/
+
+					}
+					else
+					{
+						member.WriteToJson(anInstance, jsonIns);
+					}
 
 
 
@@ -432,8 +466,13 @@ namespace Reflect
 	void DeserializeMembers(TClass* anInstance, const char* aPath)
 	{
 		std::ifstream ifs(aPath);
-		if (!ifs || ifs.fail()) return;
+		if (!ifs || ifs.fail()) return; //Return if it couldnt find a file
 
+		if (ifs.peek() == EOF)
+		{
+			ifs.close();
+			return;
+		} //Return if the file is empty
 
 		json jsonIns = nlohmann::json::parse(ifs);
 
@@ -449,11 +488,34 @@ namespace Reflect
 
 					if constexpr (!std::is_same<TupleType, std::tuple<>>::value)
 					{
-						json childElement = jsonIns[member.GetName()];
+						json& childElement = jsonIns[member.GetName()];
 						Internal::DeserializeMembers_Impl<MemberType>(member.GetValue(anInstance), childElement);
 					}
 
-					member.ReadFromJson(anInstance, jsonIns);
+					if constexpr (Internal::is_specialization<MemberType, std::vector>::value)
+					{
+						MemberType* val = member.GetValue(anInstance);
+						json vector = jsonIns[member.GetName()];
+						if (vector.contains("size"))
+							val->resize(vector["size"]);
+
+						for (size_t i = 0; i < val->size(); i++)
+						{
+							using ListType = MemberType::value_type;
+
+							ListType& element = val->at(i);
+
+							std::string name = "Element ";
+							name += std::to_string(i);
+
+							json childElement = vector[name];
+							Internal::DeserializeMembers_Impl<ListType>(&element, childElement);
+						}/**/
+					}
+					else
+					{
+						member.ReadFromJson(anInstance, jsonIns);
+					}
 
 
 

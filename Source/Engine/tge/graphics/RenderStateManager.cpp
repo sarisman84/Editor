@@ -125,6 +125,21 @@ bool RenderStateManager::CreateDepthStencilStates()
 		return false;
 
 
+
+
+
+
+	D3D11_DEPTH_STENCIL_DESC writeEqualDepthDesc = {};
+	writeEqualDepthDesc.DepthEnable = true;
+	writeEqualDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	writeEqualDepthDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	writeEqualDepthDesc.StencilEnable = false;
+
+	result = DX11::Device->CreateDepthStencilState(&writeEqualDepthDesc, &myDepthStencilStates[(int)DepthStencilState::WriteEqual]);
+	if (FAILED(result))
+		return false;
+
+
 	myDepthStencilStates[(int)DepthStencilState::Write] = nullptr;
 
 	return true;

@@ -183,6 +183,9 @@
     <ClInclude Include="..\Source\Engine\tge\graphics\RenderTarget.h">
       <Filter>tge\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Engine\tge\graphics\Spotlight.h">
+      <Filter>tge\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Engine\tge\graphics\TextureResource.h">
       <Filter>tge\graphics</Filter>
     </ClInclude>

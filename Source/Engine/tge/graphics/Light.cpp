@@ -8,4 +8,7 @@ Light::Light(const Transform& someTransform, const Color& aColor, float aIntensi
 	myTransform = someTransform;
 	myColor = aColor;
 	myIntensity = aIntensity;
+	myOuterAngle = 0;
+	myInnerAngle = 0;
+	myRange = 0;
 }

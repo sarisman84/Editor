@@ -12,7 +12,7 @@ int GetNumMips(TextureCube cubeTex)
 	return numMips;
 }
 
-cbuffer CommonBuffer : register(b0) 
+cbuffer CommonBuffer : register(b0)
 {
 	float4 Resolution; //myResolution.x = screen width, myResolution.y = screen height, myResolution.z = unset, myResolution.w = unset
 	float4 Timings; //myTimings.x = totaltime, myTimings.y = delta time, myTimings.z = unset, myTimings.w = unset
@@ -29,13 +29,19 @@ cbuffer CommonBuffer : register(b0)
 
 cbuffer LightConstantBufferData : register(b1)
 {
-	struct PointLightData
+	struct LightData
 	{
 		float4 Position;
 		float4 Color;
+        float4 FacingDirection;
 		float Range;
-		float3 garbage; // Padding, don't use arrays!
-	} myPointLights[NUMBER_OF_LIGHTS_ALLOWED];
+        float InnerAngle;
+        float OuterAngle;
+        float garbage;
+		
+	} myLights[NUMBER_OF_LIGHTS_ALLOWED];
+
+
 
 	uint NumberOfLights;
 	int NumEnvMapMipLevels;
@@ -47,7 +53,7 @@ cbuffer LightConstantBufferData : register(b1)
 	float4 DirectionalLightColorAndIntensity;
 };
 
-cbuffer CustomShapeConstantBufferData : register(b2) 
+cbuffer CustomShapeConstantBufferData : register(b2)
 {
 	float4x4 ModelToWorld;
 };
@@ -82,7 +88,7 @@ struct ModelVertexToPixel
 {
 	float4 position			:	SV_POSITION;
 	float4 worldPosition	:	POSITION;
-	float  depth		    :	DEPTH;
+	float  depth : DEPTH;
 	float4 vertexColor0		:	COLOR0;
 	float4 vertexColor1		:	COLOR1;
 	float4 vertexColor2		:	COLOR2;
@@ -129,9 +135,9 @@ cbuffer ObjectBuffer : register(b2)
 }
 
 
-float2x2 ComputeRotation(float aRotation) 
+float2x2 ComputeRotation(float aRotation)
 {
-	float c = cos(aRotation); 
+	float c = cos(aRotation);
 	float s = sin(aRotation);
 	return float2x2(c, -s, s, c);
 }

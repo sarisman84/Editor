@@ -31,6 +31,7 @@ namespace Tga
 	{
 		Write,
 		ReadOnly,
+		WriteEqual,
 		Count
 	};
 

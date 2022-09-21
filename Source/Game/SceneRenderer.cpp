@@ -138,7 +138,7 @@ void SceneRendering::Render(const Scene& aNewScene, const CameraController& aCam
 
 
 template<>
-inline auto Reflect::RegisterElement<std::shared_ptr<Tga::Light>>()
+inline auto Reflect::RegisterElement<Tga::Light>()
 {
 	return Class("Light",
 		Member("Color", &Tga::Light::myColor),

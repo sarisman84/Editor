@@ -53,13 +53,19 @@ LRESULT Game::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-bool Game::Init(const std::wstring& aVersion, HWND /*aHWND*/, std::function<void(GameWorld*)> anOnUpdateCallback)
+bool Game::Init(
+	const std::wstring& aVersion, 
+	HWND /*aHWND*/, 
+	std::function<void(GameWorld*)> anOnUpdateCallback,
+	std::function<void(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)> anOnWinProcCallback)
 {
 	Tga::EngineCreateParameters createParameters;
 
 	createParameters.myInitFunctionToCall = [this] { InitCallBack(); };
-	createParameters.myWinProcCallback = [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	createParameters.myWinProcCallback = [this, &anOnWinProcCallback](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		if (anOnWinProcCallback)
+			anOnWinProcCallback(hWnd, message, wParam, lParam);
 		switch (message)
 		{
 			// this message is read when the window is closed

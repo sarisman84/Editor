@@ -82,6 +82,8 @@ void Init()
 	Game myGame;
 	Editor myEditor;
 
+	Reflect::DeserializeMembers<Editor>(&myEditor, "editorSettings.json");
+
 	int version[] = { PRODUCTVER };
 	std::wstring versionNumber;
 
@@ -95,10 +97,15 @@ void Init()
 
 
 
-	myGame.Init(versionNumber, nullptr, [&myEditor](GameWorld* anInstance) mutable {
-		if (anInstance)
-			myEditor.Update(anInstance);
+	myGame.Init(versionNumber, nullptr, [&myEditor](GameWorld* anInstance) mutable
+		{
+			if (anInstance)
+				myEditor.Update(anInstance);
 
+		}, [&myEditor](HWND, UINT aMessage, WPARAM, LPARAM)
+		{
+			if (aMessage == WM_DESTROY)
+				Reflect::SerializeMembers<Editor>(&myEditor, "editorSettings.json");
 		}); // Blocking
 
 

@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <imgui/imgui.h>
 #include <Dragonite/Input.h>
+#include <tge/engine.h>
 
 void Editor::Update(GameWorld* aGameWorld)
 {
@@ -17,15 +18,29 @@ void Editor::Update(GameWorld* aGameWorld)
 
 	ImGui::End();
 
+
+
+    ImGui::Begin("Settings");
+
+    Reflect::InspectMembers<Editor>(this, "Editor");
+
+    ImGui::End();
+
     EndDocker();
 
+    
+    Tga::Engine::GetInstance()->SetClearColor(myClearColor);
 
     using CommonUtilities::Keyboard;
 
     if (Keyboard::GetButton(Keyboard::Key::Control) && Keyboard::GetButton(Keyboard::Key::S))
     {
         Reflect::SerializeMembers<GameWorld>(aGameWorld, "propertyMemberData.json");
+        Reflect::SerializeMembers<Editor>(this, "editorSettings.json");
     }
+
+
+
 
 }
 

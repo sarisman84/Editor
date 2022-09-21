@@ -25,16 +25,7 @@ struct Scene
 };
 
 
-template<>
-inline auto Reflect::RegisterElement<Scene>()
-{
-	return Class("Scene",
-		Member("Lights", &Scene::mySceneLights),
-		Member("Models", &Scene::myModels),
-		Member("Ambient Light", &Scene::myAmbientLight),
-		Member("Directional Light", &Scene::myDirectionalLight)
-	);
-}
+
 
 
 

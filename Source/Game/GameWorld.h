@@ -40,6 +40,12 @@ public:
 	void Update(float aTimeDelta);
 	void Render();
 
+
+	void InitScene();
+
+	void InitLights(Scene& aScene);
+	void InitModels(Scene& aScene);
+
 	CameraController myCamera;
 	Scene myScene;
 
